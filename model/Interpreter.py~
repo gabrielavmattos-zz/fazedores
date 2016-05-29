@@ -1,7 +1,9 @@
+import string
+
 class Interpreter():
 
 	dataOutput = []
-	symbolTable = []
+	symbolTable = {}
 	error = 0
 	i = 0
 	msgError = ""
@@ -10,11 +12,11 @@ class Interpreter():
 	tokensCmdLoop = ("ligar", "esperar", "desligar", "definirCor", "escrever")
 	tokensDeviceOutput = ("luz", "led", "som", "buzzer")
 	tokensDeviceInput = ("botao", "sensortoque", "potenciometro")
+	types = ("literal", "inteiro", "real", "logico")
 
 
 	def __init__(self, dataInput):		
-		dataInputWithoutSpaces = self.removeSpaces(dataInput)
-		self.dataInput = dataInputWithoutSpaces.split('\n')
+		self.dataInput = dataInput.split('\n')
 
 	def setDataInput(self, dataInput):
 		self.dataInput = dataInput
@@ -30,9 +32,8 @@ class Interpreter():
 			# conexão via socket com intel edison
 			return self.dataOutput
 
-
 	def setMsgError(self, msgError):
-		error = 1
+		self.error = 1
 		self.msgError = msgError
 		print ("Erro(linha %d): %s" % (self.i + 1,self.msgError))
 		self.getDataOutput()
@@ -40,13 +41,17 @@ class Interpreter():
 
 	def startInterpreter(self):
 
+		self.setDataOutput("import mraa")
+		self.setDataOutput("import time")
 		# vai para declaracoes		
 		while (self.declarations()):
-			print("decl")
+			pass
+
 		# vai parar comandos_setup
 		if (not self.cmdSetup()):
 			return False
-		
+
+		# vai parar comandos_loop		
 		if (not self.cmdLoop()):
 			return False
 
@@ -67,13 +72,30 @@ class Interpreter():
 
 
 	def declarations(self):
-		i = self.i
-		line = self.dataInput[i].split(' ')
-		if (line[0] in self.tokensDeclaration):
-			##
-			i = i + 1
+		"""
+		declaracao_local : 'declare' variavel
+			| 'constante' IDENT  ':'  tipo_basico '=' valor_constante
+			;
+		"""	
+	
+		line = self.dataInput[self.i].split(' ')
+		j = 0
+		if (line[j] in self.tokensDeclaration):
+			if (line[j] == "declare"):
+				j += 1
+				if (not self.validateVar(line, j)):
+					self.setMsgError("Variavel "+line[j]+" inválida.")
+					return False
+			elif (line[j] == "constante"):
+				j += 1
+				if (not self.validateConst(line, j)):
+					#self.setMsgError("Constante "+line[j]+" inválida.")
+					return False
+			else:
+				return False	
+			self.i += 1
+			return True
 		else:
-			self.i = i
 			return False
 
 
@@ -84,12 +106,14 @@ class Interpreter():
 				;
 		"""
 
-		line = self.dataInput[self.i].split('@')
+		dataInputWithoutSpaces = self.removeSpaces(self.dataInput[self.i])
+		line = dataInputWithoutSpaces.split('@')
 		if (line[0] == "comando_setup"):
-			print ("Entrou cmdSetup")
 			self.i += 1			
-			line = self.dataInput[self.i].split('@')
 			j = 0
+			print(line)
+			dataInputWithoutSpaces = self.removeSpaces(self.dataInput[self.i])
+			line = dataInputWithoutSpaces.split('@')
 			while (line[j] in self.tokensCmdSetup and self.i < len(self.dataInput)):			
 				print (line)				
 				if (line[j] == "ativar"):
@@ -120,7 +144,8 @@ class Interpreter():
 
 				self.i += 1
 				if(self.i < len(self.dataInput)-1): 
-					line = self.dataInput[self.i].split('@')
+					dataInputWithoutSpaces = self.removeSpaces(self.dataInput[self.i])
+					line = dataInputWithoutSpaces.split('@')
 					j = 0
 
 			if (self.dataInput[self.i] == "fim_comando_setup"):
@@ -141,6 +166,10 @@ class Interpreter():
 			| comandoLCD
 			;
 		"""
+
+		dataInputWithoutSpaces = self.removeSpaces(self.dataInput[self.i])
+		line = dataInputWithoutSpaces.split('@')
+
 		line = self.dataInput[self.i].split(' ')
 		
 		print (line)		
@@ -171,6 +200,7 @@ class Interpreter():
 				return True	
 			else:
 				return False
+
 		else:
 			self.setMsgError("Comando 'comando_loop' não encontrado.")
 			return False
@@ -218,9 +248,105 @@ class Interpreter():
 			
 		return True
 		
+	def validateVar(self, line, j):
+		"""
+			variavel: IDENT  dimensao  mais_var  ':' tipo
+		
+		"""
+
+		isIdent, symbol = self.validateIdent(line, j)
+		if (isIdent):
+			if(':' in line):
+				line.remove(':')
+			j = j+1
+			if (line[j] in self.types):				
+				self.symbolTable[symbol] = ["var", line[j], ""]
+				return True
+			else: 
+				return False
+			
+		else:
+			return False
+			
+					
 	
 
+	def validateConst(self, line, j):
+		"""
+			 'constante' IDENT  ':'  tipo_basico '=' valor_constante
+		"""
 
-string1 = "comando_setup\nativar(led, pinSom)\nativar(soam, pinSom)\nfim_comando_setup"
+		isIdent, symbol = self.validateIdent(line, j)		
+		if (isIdent):
+			if(':' in line):
+				line.remove(':')
+			j = j+1
+			if (len(line) >= 5):
+				isValue, value = self.validateValue(line[j], line[j+2])
+				if (line[j] in self.types and line[j+1] == '=' and isValue):				
+					self.symbolTable[symbol] = ["const", line[j], value]
+					return True
+				else:
+					return False		
+			else: 
+				return False
+			
+		else:
+			return False
+
+		return True
+
+	def validateIdent(self, line, j):
+		"""
+
+			// Definindo o identificador:
+			IDENT       : ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '0'..'9' | '_')*;	
+		"""
+		if (line[j][0].isalpha() or line[j][0] == '_'):
+			if(line[j][len(line[j])-1:len(line[j])] == ':' or line[j+1] == ':'):
+				symbol = line[j].split(':')[0]
+		
+				for i in symbol:
+					if (not i.isalpha() and not i in string.digits and not i == '_'):
+						return [False, ""]		
+			else:
+				return [False, ""]
+		else:
+
+			return [False, ""]
+		return [True, symbol]
+	
+	def validateValue(self, typeS, value):
+
+		if (typeS == "inteiro"):
+			try:
+				value = int(value)
+				return [True, value]
+			except:
+				return [False, ""]
+				
+		elif (typeS == "literal"):
+			try:
+				value = str(value)
+				return [True, value]
+			except:
+				return [False, ""]
+		elif (typeS == "logico"):
+			try:
+				value = bool(value)
+				return [True, value]
+			except:
+				return [False, ""]
+		elif (typeS == "real"):
+			try:
+				value = float(value)
+				return [True, value]
+			except:
+				return [False, ""]
+		else:
+			return [False, ""]
+
+
+string1 = "declare gabi : inteiro\nconstante gabi1: inteiro = 10\ncomando_setup\nativar(led, pinSom)\nativar(som, pinSom)\nfim_comando_setup"
 teste1 = Interpreter(string1)
 teste1.startInterpreter()

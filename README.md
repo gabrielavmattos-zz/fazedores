@@ -28,6 +28,8 @@ Model: vai ser responsável por todo o interpretador.
 Controller:
 
 View:
+  * Uma view com instruções;
+  * Uma view para testar conexão com a placa;
   * Uma view para o usuário digitar;
   * Outra view apresentando se deu erro ou não.
 

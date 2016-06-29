@@ -1,14 +1,12 @@
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
     <title>Fazedores</title>
 
@@ -43,19 +41,16 @@
 
 <body>
 
-<!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
+                    <span class="sr-only"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
@@ -63,9 +58,7 @@
                     </li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container -->
     </nav>    
 
 	<div class="algoritmo">
@@ -79,7 +72,7 @@
 						<form role="form" action="" method="post">
    							 {% csrf_token %}
     						{{ form.as_p }}
-   							 <button type="submit">Submit</button>
+   							 <button type="submit" class="btn btn-primary btn-primary"><span class="glyphicon glyphicon-saved"></span> Enviar</button>
 						</form>
 						{% endblock %}
                     </div>
@@ -93,10 +86,10 @@
 
 	<script type="text/javascript">
       window.onload = function() {
-        editor = CodeMirror.fromTextArea(document.getElementById("id_content"), {
+        editor = CodeMirror.fromTextArea(document.getElementById("id_algoritmo"), {
 		  lineNumbers: true,
    		  matchBrackets: true,
-          mode: "text/html",
+          mode: "text/fazedores",
           extraKeys: {"Ctrl-Space": "autocomplete"},
         });
       };
@@ -111,11 +104,9 @@
                     </div>
 
         </div>
-        <!-- /.container -->
 
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
@@ -125,7 +116,7 @@
                             <a href="{% url 'FazedoresInterpreter.views.exibe_programas' %}">Home</a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted small">Copyright &copy; Your Company 2014. All Rights Reserved</p>
+                    <p class="copyright text-muted small">Copyright &copy; ProjetoFazedores 2016. All Rights Reserved</p>
                 </div>
             </div>
         </div>

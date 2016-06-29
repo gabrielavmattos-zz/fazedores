@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Algoritmo
 from .forms import FormAlgoritmo
 from .Interpretador import Interpretador
+import string
 
 
 def exibe_programas(request):
@@ -14,8 +15,8 @@ def algoritmo(request):
     if request.method == 'POST': 
         form_class = FormAlgoritmo(request.POST)
         if form_class.is_valid(): 
-            algoritmo = form_class.cleaned_data['content']
-            algoritmo="Algoritmo"
+            alg = form_class.cleaned_data['algoritmo']
+            algoritmo=alg.upper()
             #interpretador = Interpretador(algoritmo)
             #algoritmo_interpretado = interpretador.interpreta()
             return render(request, 'FazedoresInterpreter/algoritmo.html', {'form': form_class, 'algoritmo': algoritmo}) # Redirect after POST   
@@ -26,7 +27,4 @@ def algoritmo(request):
     return render(request, 'FazedoresInterpreter/algoritmo.html', {
         'form': form_class,
     })    
-
-def resultado(request):
-    return render(request, 'FazedoresInterpreter/resultado.html')
 

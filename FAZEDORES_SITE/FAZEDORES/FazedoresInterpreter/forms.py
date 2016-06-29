@@ -1,7 +1,7 @@
 from django import forms
 
 class FormAlgoritmo(forms.Form):
-    content = forms.CharField(
+    algoritmo = forms.CharField(
         required=True,
         widget=forms.Textarea,
     )

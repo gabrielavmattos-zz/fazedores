@@ -1,14 +1,12 @@
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
     <title>Fazedores</title>
 
@@ -71,7 +69,7 @@
                         <h1>Projeto Fazedores</h1>
                         <h3>Uma linguagem para arduino simplificada</h3>
                         <hr class="intro-divider">
-						 <a  href="{% url 'FazedoresInterpreter.algoritmo' %}" class="btn btn-default btn-lg"><i class="fa  fa-fw"></i> <span class="network-name">Vamos Começar</span></a>
+						 <a  href="{% url 'FazedoresInterpreter.views.algoritmo' %}" class="btn btn-default btn-lg"><i class="fa  fa-fw"></i> <span class="network-name">Vamos Começar</span></a>
                         
                     </div>
                 </div>
@@ -153,7 +151,7 @@
                             <a href="#arduino">Sobre Arduino</a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted small">Copyright &copy; Your Company 2014. All Rights Reserved</p>
+                    <p class="copyright text-muted small">Copyright &copy; ProjetoFazedores 2016. All Rights Reserved</p>
                 </div>
             </div>
         </div>

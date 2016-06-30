@@ -1,0 +1,28 @@
+constante tempo: inteiro = 1000
+constante pinoPot: inteiro = 11
+constante pinoLCD: inteiro = 21
+
+declare
+	y: real
+
+comando_setup
+	
+	ativar(potenciometro, pinoPot)
+	ativar(lcd, pinoLCD)
+
+fim_comando_setup
+
+comando_loop	
+	y <- ler(sensortoque, pinoSensor)
+	definirCor(lcd, pinoLCD, (10, 300))
+	imprimeLCD()
+	esperar(tempo)
+fim_comando_loop
+
+procedimento imprimeLCD()
+	declare
+		mensagem: literal
+
+	mensagem <- "Mexeu no potenciometro"
+	escrever(lcd, pinoLCD, mensagem)
+fim_procedimento

@@ -1,0 +1,8 @@
+O setup deve ser declarado antes.
+Dica: programas em arduino dependem das funções setup (que é executada uma vez) e loop (que como o nome diz fica em loop).
+Linha 24 pino pinoSensor não declarado.
+Linha 24: porta nao ativada
+Dica: lembre-se de usar o comando ativar(dispositivo, pino) nos comandos setup.
+Linha 25: cor definida incorretamente
+Dica: a cor deve ser definida da seguinte forma (a, b, c), onde a corresponde ao R (de 0 a 255), o b ao B (de 0 a 255), e o c ao G (de 0 a 255) do sistema de cores RGB
+Fim da compilacao

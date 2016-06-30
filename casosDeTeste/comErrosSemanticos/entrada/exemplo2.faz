@@ -1,0 +1,17 @@
+constante pinSom: inteiro = 12
+constante BREATH_DELAY: inteiro = 5
+
+declare
+	i: inteiro
+
+comando_setup
+    ativar(led, pinSom)
+fim_comando_setup
+
+comando_loop
+    para i de 0 ate 256 faca
+        ligar(led, pinSom, i)
+        esperar(BREATH_DELAY)
+    fim_para
+    esperar(100)
+fim_comando_loop

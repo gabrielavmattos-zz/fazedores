@@ -1,0 +1,5 @@
+Linha 6: porta nao ativada
+Dica: lembre-se de usar o comando ativar(dispositivo, pino) nos comandos setup.
+Linha 8: porta nao ativada
+Dica: lembre-se de usar o comando ativar(dispositivo, pino) nos comandos setup.
+Fim da compilacao

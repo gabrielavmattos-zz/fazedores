@@ -1,0 +1,29 @@
+constante tempo: inteiro = 1000
+constante pinoPot: inteiro = 14
+
+declare
+	y: real
+declare
+	mensagem: literal
+
+comando_setup
+	
+	ativar(potenciometro, pinoPot)
+
+fim_comando_setup
+
+comando_loop	
+
+	leia (mensagem)
+	se mensagem = "sim" entao
+		lr(sensortoque, pinoPot
+		mensagem <- "O potenciometro foi variado."
+		escreva(mensagem)
+		esperar(tempo)	
+		mensagem <- "0"
+	senao
+		escreva("esperando digitar 'sim' para fazer a leitura")
+
+	fim_se
+		
+fim_comando_loop

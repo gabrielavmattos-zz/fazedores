@@ -4,14 +4,17 @@ class Interpreter():
 
 	dataOutput = []
 	symbolTable = {}
+	devicesTable = {}
 	error = 0
 	i = 0
 	msgError = ""
 	tokensDeclaration = ("constante", "declare", "tipo")
 	tokensCmdSetup = ("ativar")
 	tokensCmdLoop = ("ligar", "esperar", "desligar", "definirCor", "escrever")
-	tokensDeviceOutput = ("luz", "led", "som", "buzzer")
-	tokensDeviceInput = ("botao", "sensortoque", "potenciometro")
+	# Definição dos dipositivos digitais que podem ser utilizados
+	tokensDeviceDigits = ("luz", "led", "som", "buzzer", "botao", "sensortoque")
+	# Definição dos dispositivos analógicos que podem ser utilizados
+	tokensDeviceAnalogs = ("sensortoque", "potenciometro", "sensortemperatura", "sensorluz")
 	types = ("literal", "inteiro", "real", "logico")
 
 
@@ -30,6 +33,9 @@ class Interpreter():
 			return self.msgError
 		else:
 			# conexão via socket com intel edison
+
+			# se a conexao funcionar manda mensagem de ok
+			# senão mostra mensagem que compilou, mas não existe uma conexão ativa.
 			return self.dataOutput
 
 	def setMsgError(self, msgError):
@@ -43,6 +49,7 @@ class Interpreter():
 
 		self.setDataOutput("import mraa")
 		self.setDataOutput("import time")
+
 		# vai para declaracoes		
 		while (self.declarations()):
 			pass
@@ -118,18 +125,23 @@ class Interpreter():
 				print (line)				
 				if (line[j] == "ativar"):
 					j = j+1
-					if(line[j] in self.tokensDeviceOutput):
+					if(line[j] in self.tokensDeviceDigits):
+
+						#### aquiiii #####
 						print (line[j])
 						j = j+1;
-						if(self.validatePinDevice(line[j], 0)):
+						# 
+						if(self.validatePinDevice(line,j, 0)):
 							print(line[j])
 						else:
-							self.setMsgError("Pino "+line[j]+" inválido.")
+							self.setMsgError("Pino "+line[j]+" inválido.\nDica: \n- 0 a 3 portas analogicas\n- 4 a 8 são portas digitais\n- 5 e 6 são portas PWM\n- 21 porta I2C (usada para o LCD)\n")
 							return False
-					elif (line[j] in self.tokensDeviceInput):
+					elif (line[j] in self.tokensDeviceAnalogs):
 						print (line[j])
 						j = j+1;
-						if(self.validatePinDevice(line[j], 1)):
+						if(self.validatePinDevice(line,j, 1)):
+
+						#### aquiiii #####
 							print(line[j])
 						else:
 							self.setMsgError("Pino "+line[j]+" inválido.")
@@ -179,6 +191,8 @@ class Interpreter():
 			j = 0
 			while (line[j] in self.tokensCmdLoop or line[j] in self.symbolTable):
 				if (line[j] == "ligar"):
+
+						#### aquiiii #####
 					print ("ligar")
 				#elif (line[j] in ...) #verificar se tá na tabela de simbolos:
 					
@@ -229,21 +243,45 @@ class Interpreter():
 					| 'escrever' '(' lcd ',' pino ',' (CADEIA | IDENT) ')'
 					;
 		"""
+
+						#### aquiiii #####
 		return True;
 	
-	def validatePinDevice(self, pin, typeP):
+	def validatePinDevice(self, line, j, typeP):
 		"""
 			Porta utilizada não ser analógica/digital, depende do dispositivo;
-			- 0 a 10 são portas digitais (led, som, luz, botão)
-			- 3, 5, 3, 6 são portas PWM (led, som, luz, botão)
-			- 10 a 20 portas analógicas (potenciômetro, sensor de toque)
+			- 4 a 8 são portas digitais (led, som, luz, botão)
+			- 5, 6 são portas PWM (led, som, luz, botão)
+			- 0, 1, 2, 3 portas analógicas (potenciômetro, sensor de toque)
 			- 21 porta I2C (usada para o LCD)
 			- Portas 'ativar' repetidas;
 		"""
 		# typeP = 1 deviceInput
+		portsAnalog = ['0', '1', '2', '3']
+		portsDigits = ['4', '5', '6', '7', '8'] 
+
 		if(typeP):
+			j += 1
+			if ((line[j] in portsAnalog)):
+							
+			
+			elif (line[j] in self.symbolTable.keys()):
+				if (self.symbolTable[line[j]] in portsAnalog)):	
+					#print aqui			
+			else:	
+				print (symbolTable)
+				return False
 			print ("input")
 		else:	
+			if ((line[j] in portsDigits)):
+					#print aqui			
+			
+			elif (line[j] in self.symbolTable.keys()):
+				if (self.symbolTable[line[j]] in portsDigits)):	
+					#print aqui			
+			else:	
+				print (symbolTable)
+				return False
 			print ("output")
 			
 		return True

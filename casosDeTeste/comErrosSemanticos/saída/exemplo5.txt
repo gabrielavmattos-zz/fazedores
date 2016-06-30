@@ -1,0 +1,6 @@
+Linha 16 pino pinoSensor não declarado.
+Linha 16: porta nao ativada
+Dica: lembre-se de usar o comando ativar(dispositivo, pino) nos comandos setup.
+Linha 17: cor definida incorretamente
+Dica: a cor deve ser definida da seguinte forma (a, b, c), onde a corresponde ao R (de 0 a 255), o b ao B (de 0 a 255), e o c ao G (de 0 a 255) do sistema de cores RGB
+Fim da compilacao

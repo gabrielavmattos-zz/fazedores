@@ -1,0 +1,26 @@
+constante tempo: inteiro = 10
+constante pinoSensor: inteiro = 6
+constante pinoSom: inteiro = 6
+
+declare
+	y: inteiro
+
+comando_setup
+	
+	ativar(sensortoque, pinoSensor)
+	ativar(som, pinoSom)
+
+fim_comando_setup
+
+comando_loop
+
+	
+	y <- ler(sensortoque, pinoSensor)
+
+	se y = 1 entao 
+		ligar(som, pinoSom)
+	fim_se
+
+	desligar(som, pinoSom)
+
+fim_comando_loop

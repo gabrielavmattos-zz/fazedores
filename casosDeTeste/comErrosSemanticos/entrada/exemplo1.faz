@@ -1,0 +1,10 @@
+comando_setup
+    ativar(led, 5)
+fim_comando_setup
+
+comando_loop
+    ligar(led, 6)
+    esperar(1000)
+    desligar(led, 6)
+    esperar(1000)
+fim_comando_loop

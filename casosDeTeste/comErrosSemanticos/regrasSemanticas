@@ -1,0 +1,16 @@
+Regras semanticas:
+
+1 - Erros que podem ser verificados no ativar:
+ * Porta utilizada não ser analogica/digital, depende do dispositivo; (deve verificar no ativar também)
+	- 0 a 10 são portas digitais (led, som, luz, botao)
+	- 3, 5, 3, 6 são portas PWM (led, som, luz, botao)
+	- 10 a 20 portas analogicas (potenciometro, sensor de toque)
+	- 21 porta I2C (usada para o LCD)
+ * Portas 'ativar' repetidas;
+
+2 - Verificação de volt: entre 0 e 255
+	* definição de volt só pode acontecer em portas analogicas
+3 - Verificação das cores: entre 0 e 255
+4 - Verificação se a porta utilizada nos comandos loop é a mesma do setup
+4 - Verificação de uso de portas repetidas
+

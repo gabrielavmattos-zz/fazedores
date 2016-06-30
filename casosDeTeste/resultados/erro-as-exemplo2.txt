@@ -1,0 +1,13 @@
+Linha 8: uso de porta indevida
+Dica:
+- 0 a 10 são portas digitais
+- 3, 5, 3, 6 são portas PWM
+- 10 a 20 portas analogicas
+- 21 porta I2C (usada para o LCD)
+Linha 13: uso de porta indevida
+Dica:
+- 0 a 10 são portas digitais
+- 3, 5, 3, 6 são portas PWM
+- 10 a 20 portas analogicas
+- 21 porta I2C (usada para o LCD)
+Fim da compilacao

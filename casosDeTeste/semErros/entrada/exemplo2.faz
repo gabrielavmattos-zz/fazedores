@@ -1,0 +1,18 @@
+constante pinSom: inteiro = 5
+constante BREATH_DELAY: inteiro = 1
+
+declare
+	i: inteiro
+
+comando_setup
+    ativar(som, pinSom)
+fim_comando_setup
+
+comando_loop
+    para i de 0 ate 255 faca
+        ligar(som, pinSom, i/255.0)
+        esperar(BREATH_DELAY)
+	desligar(som, pinSom)
+    fim_para
+    esperar(10)
+fim_comando_loop

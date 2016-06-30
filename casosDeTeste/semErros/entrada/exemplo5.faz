@@ -1,0 +1,17 @@
+constante tempo: inteiro = 10
+constante pinoLCD: inteiro = 21
+
+declare
+	y: real
+
+comando_setup
+	
+	ativar(lcd, pinoLCD)
+
+fim_comando_setup
+
+comando_loop	
+	definirCor(lcd, pinoLCD, (10, 10, 200))
+	escrever(lcd, pinoLCD, ":D")
+	esperar(tempo)
+fim_comando_loop

@@ -1,0 +1,2 @@
+Linha 19: erro sintatico proximo a sensortoque
+Fim da compilacao

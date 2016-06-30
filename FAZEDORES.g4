@@ -33,9 +33,6 @@ NUM_REAL    : ('0'..'9')+ '.' ('0'..'9')+;
 // Definindo cadeia de caracteres:
 CADEIA      : '"' ( ~('"') )* '"';
 
-// Definindo comentarios:
-COMENTARIO  : '{' ~('{' | '}')* '}' {skip();}; 
-
 // Definindo espacos para serem ignorados:
 ESPACOS     : (' ' | '\t' | '\r' | '\n') {skip();};
 

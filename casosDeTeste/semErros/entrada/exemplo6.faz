@@ -2,8 +2,7 @@ constante tempo: inteiro = 10
 constante pinoPot: inteiro = 0
 constante pinoLCD: inteiro = 21
 
-declare
-	y: real
+declare	y: real
 
 comando_setup
 	

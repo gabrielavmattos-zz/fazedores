@@ -5,8 +5,6 @@ import time
 tempo = 10
 pinoLCD = 21
 
-y = 0.0
-
 mylcd = lcd.Jhd1313m1(1, 0x3E, 0x62)
 mylcd.setCursor(0,0)
 

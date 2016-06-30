@@ -7,14 +7,14 @@ pinoSom = 4
 
 y = 0
 
-sensortoque = mraa.Gpio(pinoSensor)
-sensortoque.dir(mraa.DIR_IN)
+sensortoque3 = mraa.Gpio(pinoSensor)
+sensortoque3.dir(mraa.DIR_IN)
 
-som = mraa.Gpio(pinSom)
-som.dir(mraa.DIR_OUT)
+som4 = mraa.Gpio(pinSom)
+som4.dir(mraa.DIR_OUT)
 
 while True:
-	y = sensortoque.read()
+	y = sensortoque3.read()
 	if (y == 1):
-		som.write(1)
-	som.write(0)
+		som4.write(1)
+	som4.write(0)

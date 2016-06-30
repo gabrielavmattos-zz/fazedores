@@ -1,0 +1,17 @@
+import mraa
+import time
+import pyupm_i2clcd as lcd
+
+tempo = 10
+pinoPot = 0
+pinoLCD = 21
+y = 0.0
+
+potenciometro0 = mraa.Aio(0)
+lcd21 = lcd.Jhd1313m1(1, 0x3E, 0x62)
+lcd21.setCursor(0,0)
+
+while True:
+	y = potenciometro0.readFloat()
+	lcd21.write(y)
+	time.sleep(tempo)

@@ -1,13 +1,14 @@
 import mraa
 import time
 
-som = mraa.Gpio(5)
-som.dir(mraa.DIR_OUT)
+som5 = mraa.Pwm(5)
+som5.period_us(700)
+som5.enable(True)
 
 while True:
-	som.write(1)
+	som5.write(1)
     	time.sleep(1)
-    	som.write(0)	
+    	som5.write(0)	
     	time.sleep(1)
 
 

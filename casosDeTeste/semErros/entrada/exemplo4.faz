@@ -1,12 +1,11 @@
 constante tempo: inteiro = 10
-constante pinoSensor: inteiro = 3
+constante pinoSensor: inteiro = 5
 constante pinoSom: inteiro = 4
 
-declare
-	y: inteiro
+declare	y: inteiro
 
 comando_setup
-	
+
 	ativar(sensortoque, pinoSensor)
 	ativar(som, pinoSom)
 

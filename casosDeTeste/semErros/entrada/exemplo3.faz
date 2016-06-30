@@ -1,7 +1,6 @@
 constante tempo: inteiro = 1
 
-declare
-	x: inteiro
+declare	x: inteiro
 
 comando_setup
 

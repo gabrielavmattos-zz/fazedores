@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Algoritmo
 from .forms import FormAlgoritmo
-from .Interpretador import Interpretador
+from .Interpreter import Interpreter
 import string
 
 
@@ -15,11 +15,22 @@ def algoritmo(request):
     if request.method == 'POST': 
         form_class = FormAlgoritmo(request.POST)
         if form_class.is_valid(): 
-            alg = form_class.cleaned_data['algoritmo']
-            algoritmo=alg.upper()
-            #interpretador = Interpretador(algoritmo)
-            #algoritmo_interpretado = interpretador.interpreta()
-            return render(request, 'FazedoresInterpreter/algoritmo.html', {'form': form_class, 'algoritmo': algoritmo}) # Redirect after POST   
+            #alg = form_class.cleaned_data['algoritmo']
+            #print ("1 "+form_class['algoritmo'].value())
+            #print ("2 "+form_class.data['algoritmo']) 
+            #alg=form_class['algoritmo'].value()
+            alg=request.POST.get('algoritmo')
+            print(alg)
+            algoritmo = str(alg)
+            print("Convertido para string \n\n"+algoritmo)
+            interpretador = Interpreter(algoritmo)
+            algoritmo_interpretado = interpretador.startInterpreter()
+            if(algoritmo_interpretado == False):
+                resposta = interpretador.msgError
+            else:    
+                resposta = algoritmo_interpretado[1]
+            print(resposta)
+            return render(request, 'FazedoresInterpreter/algoritmo.html', {'form': form_class, 'algoritmo': resposta}) # Redirect after POST   
         else:
             form_class = FormAlgoritmo()    
     

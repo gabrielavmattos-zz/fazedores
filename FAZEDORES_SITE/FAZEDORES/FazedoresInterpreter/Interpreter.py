@@ -12,10 +12,12 @@ class Interpreter():
 	dataOutput = []
 	symbolTable = {}
 	devicesTable = {}
+	portsAnalog = []
+	portsDigits = [] 
 	error = 0
 	i = 0
 	msgError = ""
-	tokensDeclaration = ("constante", "declare", "tipo")
+	tokensDeclaration = ("constante", "declare")
 	tokensCmdSetup = ("ativar")
 	tokensCmdLoop = ("ligar", "esperar", "desligar", "definirCor", "escrever")
 	# Definição dos dipositivos digitais que podem ser utilizados
@@ -29,6 +31,7 @@ class Interpreter():
 
 		#print(dataInput)
 		dataInput += '\r\n'
+		self.dataOutput = []
 		self.setDataOutput("import mraa")
 
 		if (dataInput.find("esperar") != -1):
@@ -62,8 +65,6 @@ class Interpreter():
 				servidorSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 			
 				resposta = servidorSocket.sendto(saida, (HOST, PORT))
-				print(resposta)	
-				print(len(saida))
 				servidorSocket.close()	
 				return[True, saida]			
 			except:
@@ -80,6 +81,7 @@ class Interpreter():
 	def replaceBT(self, dataInput):
 		aux = ""
 		for i in range(0, len(dataInput)-1):
+			print("'"+dataInput[i]+"'")
 			if (dataInput[i] == '\t' or dataInput[i] == '\r'): 
 				aux += ' '
 			else:
@@ -114,31 +116,18 @@ class Interpreter():
 
 	def startInterpreter(self):
 
-		#print(self.dataInput)
-
 		self.setDataOutput("")
 
 		# vai para declaracoes		
 		while (self.declarations()):
 			pass
+		else:	
+			if (not self.cmdLoop()):
+				return False
+			else:	
+				self.setDataOutput("")
+				return self.getDataOutput()
 
-		self.setDataOutput("")
-
-		# vai parar fs_setup
-		if (not self.cmdSetup()):
-			return False
-
-		self.setDataOutput("")
-
-		# vai parar comandos_loop
-		#print(self.dataInput[self.i])		
-		if (not self.cmdLoop()):
-			return False
-
-		return self.getDataOutput()
-
-
-	
 	def removeSpaces(self, dataInput):
 		
 		aux = ""
@@ -150,8 +139,6 @@ class Interpreter():
 				aux += i
 		return aux
 
-
-
 	def declarations(self):
 		"""
 		declaracao_local : 'declare' variavel
@@ -160,15 +147,14 @@ class Interpreter():
 		"""	
 	
 		line = self.dataInput[self.i].split(' ')
+		print ("adbahbsda")
 		print (line)
 
 		j = 0
-		#print(line)
 		if (line[j] in self.tokensDeclaration):
 			if (line[j] == "declare"):
 				j += 1
 				if (not self.validateVar(line, j)):
-					self.setMsgError("Variavel "+line[j]+" inválida.")
 					return False
 			elif (line[j] == "constante"):
 				j += 1
@@ -176,10 +162,17 @@ class Interpreter():
 					self.setMsgError("Constante "+line[j]+" inválida.")
 					return False
 			else:
+				self.setMsgError("Comando "+line[j]+" incorreto.")
 				return False	
 			self.i += 1
 			return True
+		elif(line[0] == "comando_setup"):
+			#self.i += 1
+			# vai parar comandos_setup
+			if (not self.cmdSetup()):
+				return False 		
 		else:
+			#self.setMsgError("O comando "+line[j]+" não é reconhecido.")
 			return False
 
 
@@ -189,7 +182,7 @@ class Interpreter():
 		comandoSetup	: 'ativar' '(' dispositivo ',' pino ')'
 				;
 		"""
-		#print("setup")
+		print("setup")
 		#try:
 		#	if (self.dataInput[self.i].index(' ')):
 		dataInputWithoutSpaces = self.removeSpaces(self.dataInput[self.i])
@@ -217,8 +210,6 @@ class Interpreter():
 						j = j+1;
 						if(self.validatePinDevice(line,j,1)):
 							pass
-							#### aquiiii #####
-							#print(line[j])
 						else:
 							self.setMsgError("Pino "+line[j]+" inválido.")
 							return False
@@ -279,7 +270,7 @@ class Interpreter():
 			j = 0
 			self.setDataOutput("while True:")
 			while (line[j] in self.tokensCmdLoop or line[j] in self.symbolTable):
-				#print ("Linha atual: " + line[j])
+				print ("Linha atual: " + line[j])
 				if (self.cmdOutput(line, j, indentation)):
 					pass 	
 		
@@ -302,15 +293,15 @@ class Interpreter():
 				line = dataInputWithoutSpaces.split('@')
 				j = 0	
 			else:
-
+				print("Aqui" + line[j])
 				if ("fim_comando_loop" in self.dataInput[self.i]):
 					return True	
 				else:
-					self.setMsgError("Comando '"+line[j]+"' não reconhecido.")
+					#self.setMsgError("Comando '"+line[j]+"' não reconhecido.")
 					return False
 
 		else:
-			self.setMsgError("Comando 'comando_loop' não encontrado "+ line[0]+ ",,")
+			#self.setMsgError("Comando "+line[0]+" não reconhecido.")
 			return False
 	
 	def cmdOutput(self, line, j, indentation):
@@ -323,11 +314,11 @@ class Interpreter():
 					if (self.symbolTable[line[j+1]][1] == 'inteiro'):
 						idDevice = line[j]+str(self.symbolTable[line[j+1]][2])
 					else:
-						self.msgError = "Comando 'ligar' deve passar um valor inteiro."
+						self.setMsgError("Comando 'ligar' deve passar um valor inteiro.")
 						return False
 					
 				else:
-								self.msgError = "Comando 'ligar' utilizado em dispositivo errado."
+								self.setMsgError("Comando 'ligar' utilizado em dispositivo errado.")
 								return False
 			print(idDevice)
 
@@ -343,10 +334,10 @@ class Interpreter():
 								self.setDataOutput("\t"*indentation + idDevice + ".write("+line[3]+"/255.0)")
 								self.devicesTable[idDevice][2] = 'ativo'			
 							else: 
-								self.msgError = "Comando 'ligar' em pwm deve passar um valor inteiro."
+								self.setMsgError("Comando 'ligar' em pwm deve passar um valor inteiro.")
 								return False
 						else:
-							self.msgError = "Comando 'ligar' em pwm deve passar um valor inteiro."
+							self.setMsgError("Comando 'ligar' em pwm deve passar um valor inteiro.")
 							return False
 					elif (self.devicesTable[idDevice][2] == 'desativo'):
 						#print ("aui " +line[2]) 
@@ -360,7 +351,6 @@ class Interpreter():
 				elif (self.devicesTable[idDevice][0] == 'digitsOUT'):
 					if(len(line) > 4):
 						if (line[3].isdigit()):
-							#print ("Tá aqui")
 							self.setDataOutput("\t"*indentation + idDevice + ".write("+line[3]+"/255.0)")					
 							self.devicesTable[idDevice][2] = 'ativo'			
 						elif(line[3] in self.symbolTable):
@@ -368,21 +358,20 @@ class Interpreter():
 								self.setDataOutput("\t"*indentation + idDevice + ".write("+line[3]+"/255.0)")
 								self.devicesTable[idDevice][2] = 'ativo'			
 							else: 
-								self.msgError = "Comando 'ligar' em pwm deve passar um valor inteiro."
+								self.setMsgError("Comando 'ligar' em pwm deve passar um valor inteiro.")
 								return False
 						else:
-							self.msgError = "Comando 'ligar' em pwm deve passar um valor inteiro."
+							self.setMsgError("Comando 'ligar' em pwm deve passar um valor inteiro.")
 							return False
 					elif (self.devicesTable[idDevice][2] == 'desativo'):
 						#print ("aui " +line[2]) 
 						self.setDataOutput("\t"*indentation + idDevice + ".write(1)")
 						self.devicesTable[idDevice][2] = 'ativo'
 				else:						
-					self.msgError = "Comando 'ligar' utilizado em dispositivo errado."
+					self.setMsgError("Comando 'ligar' utilizado em dispositivo errado.")
 					return False
 
 			else:
-				self.msgError = ""
 				return False
 
 		elif (line[j] == "desligar"):
@@ -396,7 +385,7 @@ class Interpreter():
 					
 					
 				else:
-								self.msgError = "Comando 'desligar' utilizado em dispositivo errado."
+								self.setMsgError("Comando 'desligar' utilizado em dispositivo errado.")
 								return False
 			#print(idDevice)
 			if (idDevice in self.devicesTable):
@@ -405,11 +394,10 @@ class Interpreter():
 						self.setDataOutput("\t"*indentation + idDevice + ".write(0)")
 						self.devicesTable[idDevice][2] = 'desativo'
 				else:						
-					self.msgError = "Comando 'ligar' utilizado em dispositivo errada."
+					self.setMsgError("Comando 'ligar' utilizado em dispositivo errada.")
 					return False
 
 			else:
-				self.msgError = ""
 				return False
 
 		else:
@@ -434,23 +422,21 @@ class Interpreter():
 							if (self.symbolTable[line[j+1]][1] == 'inteiro'):
 								idDevice = line[j]+str(self.symbolTable[line[j+1]][2])
 							else:			
-								self.msgError = "Comando 'ler' utilizado em dispositivo errado."
+								self.setMsgError("Comando 'ler' utilizado em dispositivo errado.")
 								return False
 						else:			
-							self.msgError = "Comando 'ler' utilizado em dispositivo errado."
+							self.setMsgError("Comando 'ler' utilizado em dispositivo errado.")
 							return False
 					print(self.devicesTable)
-					if (idDevice in self.devicesTable):
-						print ("Aqui = " + idDevice + ".")			
+					if (idDevice in self.devicesTable):		
 						if (self.devicesTable[idDevice][0] == 'digitsIN'):
-							print("OUUU")
 							self.setDataOutput("\t"*indentation + output + idDevice + ".read()")
 						else:
-							self.msgError = "Pino incorreto."
+							self.setMsgError("Pino incorreto.")
 							return False
 	
 					else:
-						self.msgError = "Pino informado não encontrado."
+						self.setMsgError("Pino informado não encontrado.")
 						return False
 	
 				elif(line[j] in self.tokensDeviceAnalogs):
@@ -462,10 +448,10 @@ class Interpreter():
 							if (self.symbolTable[line[j+1]][1] == 'inteiro'):
 								idDevice = line[j]+str(self.symbolTable[line[j+1]][2])
 							else:			
-								self.msgError = "Comando 'ler' utilizado em dispositivo errado."
+								self.setMsgError("Comando 'ler' utilizado em dispositivo errado.")
 								return False
 						else:			
-							self.msgError = "Comando 'ler' utilizado em dispositivo errado."
+							self.setMsgError("Comando 'ler' utilizado em dispositivo errado.")
 							return False
 								
 					if (idDevice in self.devicesTable):
@@ -474,15 +460,15 @@ class Interpreter():
 
 							self.setDataOutput("\t"*indentation + output + idDevice + ".readFloat()")
 						else:
-							self.msgError = "Pino incorreto."
+							self.setMsgError("Pino incorreto.")
 							return False
 	
 					else:
-						self.msgError = "Pino informado não encontrado."
+						self.setMsgError("Pino informado não encontrado.")
 						return False
 					
 				else:
-					self.msgError = "Comando 'ler' utilizado em dispositivo errado."
+					self.setMsgError("Comando 'ler' utilizado em dispositivo errado.")
 					return False
 		else:
 			return False
@@ -539,10 +525,10 @@ class Interpreter():
 					if (self.symbolTable[line[j+1]][1] == 'inteiro'):
 						idDevice = line[j]+str(self.symbolTable[line[j+1]][2])
 					else:			
-						self.msgError = "Comando 'lcd' utilizado em dispositivo errado."
+						self.setMsgError("Comando 'lcd' utilizado em dispositivo errado.")
 						return False
 				else:			
-					self.msgError = "Comando 'lcd' utilizado em dispositivo errado."
+					self.setMsgError("Comando 'lcd' utilizado em dispositivo errado.")
 					return False
 
 				if (idDevice in self.devicesTable):
@@ -553,26 +539,24 @@ class Interpreter():
 							c3 = int(line[j+5])
 							
 							if (c1 < 225 and c1>0 and c2 < 225 and c2 > 0 and c3 < 225 and c3 > 0):
-
-								print("\t"*indentation + idDevice + ".setColor(%d,%d,%d)" % (c1,c2,c3))
-								self.setDataOutput("\t"*indentation + idDevice + ".setColor(%d,%d,%d)" % (c1,c2,c3))							
+								pass										
 							else:
-								self.msgError = "Cores incorretas."
+								self.setMsgError("Cores incorretas.")
 								return False
 						except:
-							self.msgError = "As cores devem ser números inteiros."
+							self.setMsgError("As cores devem ser números inteiros.")
 							return False								
 
 					else:
-						self.msgError = "Pino incorreto."
+						self.setMsgError("Pino incorreto.")
 						return False
 
 				else:
-					self.msgError = "Pino informado não encontrado."
+					self.setMsgError("Pino informado não encontrado.")
 					return False
 
 			else:
-				self.msgError = "Comando 'definirCor' utilizado em dispositivo errado."
+				self.setMsgError("Comando 'definirCor' utilizado em dispositivo errado.")
 				return False
 		elif (line[j] == 'escrever'):
 			j += 1
@@ -583,10 +567,10 @@ class Interpreter():
 					if (self.symbolTable[line[j+1]][1] == 'inteiro'):
 						idDevice = line[j]+str(self.symbolTable[line[j+1]][2])
 					else:			
-						self.msgError = "Comando 'lcd' utilizado em dispositivo errado."
+						self.setMsgError("Comando 'lcd' utilizado em dispositivo errado.")
 						return False
 				else:			
-					self.msgError = "Comando 'lcd' utilizado em dispositivo errado."
+					self.setMsgError("Comando 'lcd' utilizado em dispositivo errado.")
 					return False
 				if (idDevice in self.devicesTable):
 					if (self.devicesTable[idDevice][0] == 'lcd'):
@@ -596,15 +580,15 @@ class Interpreter():
 							#	return False					
 
 					else:
-						self.msgError = "Pino incorreto."
+						self.setMsgError("Pino incorreto.")
 						return False
 
 				else:
-					self.msgError = "Pino informado não encontrado."
+					self.setMsgError("Pino informado não encontrado.")
 					return False
 
 			else:
-				self.msgError = "Comando 'definirCor' utilizado em dispositivo errado."
+				self.setMsgError("Comando 'definirCor' utilizado em dispositivo errado.")
 				return False
 		else:
 			self.setMsgError("Comando "+ line[j]+ " incorreto.")
@@ -622,8 +606,8 @@ class Interpreter():
 			- Portas 'ativar' repetidas;
 		"""
 		# typeP = 1 deviceInput
-		portsAnalog = ['0', '1', '2', '3']
-		portsDigits = ['4', '5', '6', '7', '8'] 
+		self.portsAnalog = ['0', '1', '2', '3']
+		self.portsDigits = ['4', '5', '6', '7', '8'] 
 
 		if (typeP == 2): 
 			j+= 1
@@ -644,37 +628,37 @@ class Interpreter():
 			
 					
 		elif(typeP == 1):
-			if (line[j] in portsAnalog):
+			if (line[j] in self.portsAnalog):
 				idDevice = line[j-1]+line[j]
 				if (not idDevice in self.devicesTable):
 					self.devicesTable[idDevice] = ['analogic', line[j], ""]
 					self.setDataOutput(idDevice + " = mraa.Aio(" + line[j] +")")
-					portsAnalog.remove(line[j])	
+					self.portsAnalog.remove(line[j])	
 				else:
 					return False
 						
 							
 			elif (line[j] in self.symbolTable.keys()):
 				line[j] = str(self.symbolTable[line[j]][2])
-				if (line[j] in portsAnalog):
+				if (line[j] in self.portsAnalog):
 					idDevice = line[j-1]+line[j] 
 					if (not idDevice in self.devicesTable):
 						self.devicesTable[idDevice] = ['analogic', line[j], ""]
 						self.setDataOutput(idDevice + " = mraa.Aio(" + line[j]+")")
-						portsAnalog.remove(line[j])		
+						self.portsAnalog.remove(line[j])		
 					else:
 						return False						
 			else:	
 				return False
 		else:	
-			if (line[j] in portsDigits):
+			if (line[j] in self.portsDigits):
 				if (line[j-1] in ('botao', 'sensortoque')):
 					idDevice = line[1]+line[2]
 					if (not idDevice in self.devicesTable):
 						self.devicesTable[idDevice] = ['digitsIN', line[2], ""]
 						self.setDataOutput(idDevice + " = mraa.Gpio(" + line[2]+")")
 						self.setDataOutput(idDevice + ".dir(mraa.DIR_IN)")
-						portsDigits.remove(line[j])
+						self.portsDigits.remove(line[j])
 					else:
 						return False
 				else:					
@@ -685,7 +669,7 @@ class Interpreter():
 							self.setDataOutput(idDevice + " = mraa.Pwm(" + line[2] +")")
 							self.setDataOutput(idDevice +".period_us(700)")
 							self.setDataOutput(idDevice +".enable(True)")
-							portsDigits.remove(line[j])	
+							self.portsDigits.remove(line[j])	
 						else:
 							return False
 						
@@ -695,13 +679,13 @@ class Interpreter():
 							self.devicesTable[idDevice] = ['digitsOUT', line[2], "desativo"]	
 							self.setDataOutput(idDevice + " = mraa.Gpio(" + line[2]+")")
 							self.setDataOutput(idDevice + ".dir(mraa.DIR_OUT)")
-							portsDigits.remove(line[j])	
+							self.portsDigits.remove(line[j])	
 						else:
 							return False
 			
 			elif (line[j] in self.symbolTable.keys()):
 				print("Ol")
-				if (str(self.symbolTable[line[j]][2]) in portsDigits):
+				if (str(self.symbolTable[line[j]][2]) in self.portsDigits):
 					line[j] = str(self.symbolTable[line[j]][2])
 					
 					if (line[j-1] in ('botao', 'sensortoque')):
@@ -710,7 +694,7 @@ class Interpreter():
 							self.devicesTable[idDevice] = ['digitsIN', line[2], ""]
 							self.setDataOutput(idDevice + " = mraa.Gpio(" + line[2]+")")
 							self.setDataOutput(idDevice + ".dir(mraa.DIR_IN)")
-							portsDigits.remove(line[2])	
+							self.portsDigits.remove(line[2])	
 						else:
 							return False
 					else:					
@@ -721,7 +705,7 @@ class Interpreter():
 								self.setDataOutput(idDevice + " = mraa.Pwm(" + line[2] +")")
 								self.setDataOutput(idDevice +".period_us(700)")
 								self.setDataOutput(idDevice +".enable(True)")
-								portsDigits.remove(line[2])		
+								self.portsDigits.remove(line[2])		
 							else:
 								return False
 						
@@ -731,7 +715,7 @@ class Interpreter():
 								self.devicesTable[idDevice] = ['digitsOUT', line[2], "desativo"]	
 								self.setDataOutput(idDevice + " = mraa.Gpio(" + line[2]+")")
 								self.setDataOutput(idDevice + ".dir(mraa.DIR_OUT)")
-								portsDigits.remove(line[2])		
+								self.portsDigits.remove(line[2])		
 							else:
 								return False
 	
@@ -755,15 +739,17 @@ class Interpreter():
 			j = j+1
 			isValue, value = self.validateValue(line[j], '0')
 			if (line[j] in self.types and isValue):	
-				print(line[j])
 				self.symbolTable[symbol] = ["var", line[j], value]
 				self.setDataOutput(symbol +" = "+ str(value))
 				print(self.symbolTable)
 				return True
 			else: 
+				self.setMsgError("Verifique a variavel "+line[j-1]+" e seu tipo "+line[j]+".")
 				return False
 			
-		else:
+		else: 
+			self.setMsgError("Verifique a variavel "+line[j-1]+" e seu tipo "+line[j]+".")
+			
 			return False
 			
 					
@@ -778,7 +764,7 @@ class Interpreter():
 			if(':' in line[j]):
 				line[j] = line[j][:len(line[j])-1]
 			j += 1
-			print(line[j])
+
 			isValue, value = self.validateValue(line[j], line[j+2])
 			if (line[j] in self.types and line[j+1] == '=' and isValue):				
 				print(line[j])
@@ -803,6 +789,8 @@ class Interpreter():
 		if (line[0].isalpha() or line[0] == '_'):
 			if(line[len(line)-1:len(line)] == ':'):
 				symbol = line.split(':')[0]
+				if (symbol in self.symbolTable.keys()):
+					return [False, ""]
 		
 				for i in symbol:
 					if (not i.isalpha() and not i in string.digits and not i == '_'):
@@ -843,3 +831,14 @@ class Interpreter():
 				return [False, ""]
 		else:
 			return [False, ""]
+
+	def __del__(self):
+
+		self.symbolTable.clear()
+		self.devicesTable.clear()
+		del self.portsAnalog
+		del self.portsDigits 
+		del self.dataOutput
+		del self.dataInput
+		
+			

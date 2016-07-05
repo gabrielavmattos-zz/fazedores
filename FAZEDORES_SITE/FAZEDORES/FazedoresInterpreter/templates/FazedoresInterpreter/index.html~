@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="{% static 'css/FazedoresInterpreter.css' %}">
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -28,19 +30,16 @@
 
 <body>
 
-<!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
+                    <span class="sr-only"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
             </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
@@ -54,9 +53,7 @@
                     </li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container -->
     </nav>
 
 	<a name="inicio"></a>
@@ -76,12 +73,9 @@
             </div>
 
         </div>
-        <!-- /.container -->
 
     </div>
-    <!-- /.intro-header -->
 
-    <!-- Page Content -->
 
 	<a  name="fazedores"></a>
     <div class="content-section-a">
@@ -93,7 +87,7 @@
                     <div class="clearfix"></div>
                     <h2 class="section-heading">Linguagem Fazedores:</h2>
                     <p class="lead">A linguagem Fazedores é uma linguagem de alto nível bem semelhante a linguagem natural que permite ao usuário utilizar dispositivos de prototipação eletrônica, como LED, Buzzer, LCD, Botão, Sensor de toque e Potenciômetro.
-</p>
+</p>	<a class='btn btn-medium' data-toggle='modal' href="#learnMore" onclick="$('#learnMore').show();">Veja mais &raquo;</a>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
 					<br/><br/>
@@ -102,10 +96,8 @@
             </div>
 
         </div>
-        <!-- /.container -->
-
     </div>
-    <!-- /.content-section-a -->
+
 
 	<a  name="arduino"></a>
     <div class="content-section-b">
@@ -129,6 +121,41 @@
 
     </div>
     <!-- /.content-section-b -->
+
+
+   <!-- Learn more -->
+	<div class='learn' id='learnMore'
+		style='display: none; width: 800px; height: 610px; margin-top: -305px; margin-left: -400px;'>
+		<div class='modal-header'>
+			<button class='close' data-dismiss='modal'>×</button>
+			<h3>Try it!!</h3>
+		</div>
+		<div class='modal-body' style='max-height: 600px'>
+			<p>
+				<img src='gfx/workflow.png' />
+			</p>
+			<p>
+				We think that the best way to render your files is without any
+				necessary conversions. Just drop'em on this website and they are ready
+				to render. <b>Slice:Drop</b> supports a variety of scientific file formats
+				out-of-the-box (see <a
+					href='https://github.com/xtk/X/wiki/X%3AFileformats'
+					target='_blank' style='color:cornflowerblue'>here</a> for a complete list).
+			</p>			
+			<img src='gfx/multitouch.png' style='float:right'/>
+			<p>
+				<b>Slice:Drop</b> uses WebGL and HTML5 Canvas to render the data in
+				2D and 3D. We use our own open-source toolkit to perform the
+				rendering, called <a href='http://goXTK.com' target='_blank' style='color:cornflowerblue'>XTK</a>.
+			</p>
+			<p>All data stays on the client and nothing gets transferred via the internet. This is totally safe!
+			</p>
+			<p>
+				We are very keen on your feedback, so please <a
+					href='mailto:dev@goxtk.com' style='color:cornflowerblue'>email us</a>.
+			</p>
+		</div>
+	</div>
 
     
     

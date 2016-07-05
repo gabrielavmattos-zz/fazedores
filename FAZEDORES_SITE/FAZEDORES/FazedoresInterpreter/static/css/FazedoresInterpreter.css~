@@ -41,7 +41,7 @@ h6 {
 
 .algoritmo{
     padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
-    padding-bottom: 50px;
+    padding-bottom: 20px;
     text-align: center;
     color: #000000;
 	text-align: left;
@@ -178,6 +178,11 @@ h6 {
     ul.banner-social-buttons > li:last-child {
         margin-bottom: 0;
     }
+}
+
+.learn{
+ 	z-index:9; 
+	position: absolute;
 }
 
 footer {

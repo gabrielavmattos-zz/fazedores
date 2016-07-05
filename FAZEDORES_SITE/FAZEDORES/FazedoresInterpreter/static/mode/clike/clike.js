@@ -486,8 +486,9 @@ CodeMirror.defineMode("clike", function(config, parserConfig) {
 
   def("text/fazedores", {
     name: "clike",
-    keywords: words("comando_setup fim_comando_setup ativar ligar desligar ler esperar comando_loop fim_comando_loop definirCor escrever"),
-    types: words("luz led som botao sensortoque potenciometro LCD lcd tela"),
+    keywords: words("comando_setup fim_comando_setup ativar ligar desligar ler esperar comando_loop fim_comando_loop definirCor escrever"+
+			"procedimento funcao declare constante tipo"),
+    types: words("luz led som botao sensortoque potenciometro LCD lcd tela literal inteiro real logico verdadeiro falso"),
     typeFirstDefinitions: true,
     hooks: {
       "@": function(stream, state) {

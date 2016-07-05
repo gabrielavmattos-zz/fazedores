@@ -833,6 +833,7 @@ class Interpreter():
 			return [False, ""]
 
 	def __del__(self):
+		print("etejabsdadba")
 
 		self.symbolTable.clear()
 		self.devicesTable.clear()

@@ -39,3 +39,4 @@ def algoritmo(request):
     return render(request, 'FazedoresInterpreter/algoritmo.html', {
         'form': form_class,
     })    
+

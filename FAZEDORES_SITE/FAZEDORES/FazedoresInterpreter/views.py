@@ -25,6 +25,7 @@ def algoritmo(request):
             print("Convertido para string \n\n"+algoritmo)
             interpretador = Interpreter(algoritmo)
             algoritmo_interpretado = interpretador.startInterpreter()
+	    resposta = ""
             if(algoritmo_interpretado == False):
                 resposta = interpretador.msgError
             else:    
@@ -38,4 +39,3 @@ def algoritmo(request):
     return render(request, 'FazedoresInterpreter/algoritmo.html', {
         'form': form_class,
     })    
-

@@ -1,2 +1,0 @@
-Linha 2: erro sintatico proximo a ativa
-Fim da compilacao

@@ -1,4 +1,0 @@
-Linha 11: Esse pino já foi ativado anteriormente.
-Linha 21: A porta 6 foi declarada associada ao dispositivo sensortoque e usada com o dispositivo som
-Linha 24: A porta 6 foi declarada associada ao dispositivo sensortoque e usada com o dispositivo som
-Fim da compilacao

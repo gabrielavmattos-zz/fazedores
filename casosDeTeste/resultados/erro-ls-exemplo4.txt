@@ -1,2 +1,0 @@
-Linha 10: erro sintatico proximo a pinoSensor
-Fim da compilacao

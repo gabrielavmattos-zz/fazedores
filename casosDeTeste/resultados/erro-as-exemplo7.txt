@@ -1,2 +1,0 @@
-Linha 19: A porta 14 foi declarada associada ao dispositivo potenciometro e usada com o dispositivo sensortoque
-Fim da compilacao

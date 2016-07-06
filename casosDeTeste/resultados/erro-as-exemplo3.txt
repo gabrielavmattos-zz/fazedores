@@ -1,2 +1,0 @@
-Linha 18: uso de volt em portas que não são analogicas nem PWM
-Fim da compilacao

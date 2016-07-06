@@ -25,13 +25,9 @@ Model: vai ser responsável por todo o interpretador.
     * Se der erro retorna para view e ela apresenta o erro.
     * Se funcionar chama uma função que envia os comandos para o servidor da placa Edison, retorna pra view mensagem de sucesso;
 
-Controller:
-
 View:
-  * Uma view com instruções;
-  * Uma view para testar conexão com a placa;
-  * Uma view para o usuário digitar;
-  * Outra view apresentando se deu erro ou não.
+  * Uma view principal;
+  * Uma view para o usuário digitar.
 
 ### Servidor Edison:
 * Socket esperando uma mensagem, de inicio um servidor monothread;

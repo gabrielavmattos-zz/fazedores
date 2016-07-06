@@ -34,9 +34,10 @@ h6 {
     padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
     padding-bottom: 50px;
     text-align: center;
-    color: #5c8a8a;
-    /*background: url(../img/intro-bg.jpg) no-repeat center center; */
-    background-size: 200px 1000px;
+    color: #f8f8f8;
+    background: url(../img/maker.jpg) no-repeat center center;
+    opacity: 0.85;
+    background-size: cover;
 }
 
 .algoritmo{

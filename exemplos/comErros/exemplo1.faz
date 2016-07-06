@@ -1,0 +1,10 @@
+comando_setup
+    ativar(som, 1)
+fim_comando_setup
+
+comando_loop
+    ligar(som, 5)
+    esperar(1)
+    desligar(som, 5)
+    esperar(1)
+fim_comando_loop

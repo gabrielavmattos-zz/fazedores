@@ -1,0 +1,18 @@
+constante tempo inteiro = 1
+
+declare	x: inteiro
+
+comando_setup
+
+	ativar(luz, 5)
+	ativar(botao, 4)
+
+fim_comando_setup
+
+comando_loop
+
+	x <- ler(botao, 4)
+	ligar(luz, 5)
+	desligar(luz, 5)
+
+fim_comando_loop

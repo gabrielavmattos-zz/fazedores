@@ -1,0 +1,17 @@
+constante tempo: inteiro = 10
+constante pinoSensorT: inteiro = 1
+constante pinoSensorL: inteiro = 1
+
+declare	x: real
+declare	y: real
+
+comando_setup
+	ativar(sensemperatura, pinoSensor)
+	ativar(sensorluz, pinoSensor)
+fim_comando_setup
+
+comando_loop
+	x <- ler(sensortemperatura, pinoSensor)
+	y <- ler(sensorluz, pinoSensor)
+	esperar(tempo)
+fim_comando_loop
